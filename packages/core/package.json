@@ -1,7 +1,8 @@
 {
-  "name": "core",
+  "name": "@convodroid/bfrwebchat-core",
   "version": "0.1.0",
-  "main": "dist/cjs/index.js",
+  "homepage-azure": "https://emplayazstorage.blob.core.windows.net/emplaywebchat-test/react",
+  "main": "build/static/js/main.c15ea09d.chunk.js",
   "module": "dist/esm/index.js",
   "browser": "dist/browser/data-structures.js",
   "dependencies": {
