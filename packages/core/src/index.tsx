@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './styles/main.scss';
 import App from './app/App';
 import reportWebVitals from "./reportWebVitals";
+
+export const ConvodroidReactBFRWebchat = App;
 
 export const bootstrap = (WebChatRootElementId: string) => {
     ReactDOM.render(
         <React.StrictMode>
-            <App />
+            <ConvodroidReactBFRWebchat />
         </React.StrictMode>,
         document.getElementById(WebChatRootElementId)
     );

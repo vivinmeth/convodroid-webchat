@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 import ReactWebChat, {createDirectLine} from "botframework-webchat";
-import './App.css';
+import './App.scss';
 import {adaptiveCardsHostConfig} from "./adaptiveCardHostConfig";
 
-function App() {
+export default function App() {
   const directline = useMemo(() => createDirectLine({
       token: 'TwbA_KoJmQU.3-BAeeMaH_O2FvFnZ6Ez2Phc6VilHNoRvGslZ3mXmiU',
       // domain: 'http://localhost:5003/directline'
@@ -22,5 +22,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
