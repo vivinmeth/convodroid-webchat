@@ -3,8 +3,12 @@ import ReactDOM from 'react-dom';
 import './styles/main.scss';
 import App from './app/App';
 import reportWebVitals from "./reportWebVitals";
+import {StyleOptionsMiddlewareFrontEnd} from "./app/middlewares/styleOptions.middleware";
 
 export const ConvodroidReactBFRWebchat = App;
+
+export const StyleOptionsMiddleware = new StyleOptionsMiddlewareFrontEnd();
+
 
 export const bootstrap = (container: { Id?: string, Element?: (HTMLElement | null)}) => {
     let element;
@@ -23,7 +27,9 @@ export const bootstrap = (container: { Id?: string, Element?: (HTMLElement | nul
 
     ReactDOM.render(
         <React.StrictMode>
-            <ConvodroidReactBFRWebchat />
+            <ConvodroidReactBFRWebchat
+                StyleOptionsMWRFrontEnd={StyleOptionsMiddleware}
+            />
         </React.StrictMode>,
         container.Element || element as HTMLElement);
 
@@ -33,3 +39,4 @@ export const bootstrap = (container: { Id?: string, Element?: (HTMLElement | nul
     reportWebVitals();
 
 }
+

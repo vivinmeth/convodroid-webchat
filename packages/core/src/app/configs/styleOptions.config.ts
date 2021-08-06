@@ -304,7 +304,7 @@ const styleOptions= {
      */
     timestampColor: undefined,
 
-    timestampFormat: 'absolute',
+    timestampFormat: "absolute",
 
     /**
      * Transcript styling
@@ -442,8 +442,7 @@ const styleOptions= {
     richCardWrapTitle: undefined
 };
 
-// @ts-ignore
-Object.keys(styleOptions).forEach(key => styleOptions[key] === undefined ? delete styleOptions[key] : {});
+
 
 
 export default styleOptions;
