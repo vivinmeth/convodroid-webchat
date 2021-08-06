@@ -1,7 +1,11 @@
 import React, {useMemo} from 'react';
 import ReactWebChat, {createDirectLine} from "botframework-webchat";
+
+
 import './App.scss';
-import {adaptiveCardsHostConfig} from "./adaptiveCardHostConfig";
+import adaptiveCardsHostConfig from "./configs/adaptiveCardsHostConfig.config";
+import styleOptions from './configs/styleOptions.config';
+import FullBundleStyleOptions from "botframework-webchat/lib/types/FullBundleStyleOptions";
 
 export default function App() {
   const directline = useMemo(() => createDirectLine({
@@ -18,6 +22,7 @@ export default function App() {
             username={'vivinmeth'}
             adaptiveCardsHostConfig={{...adaptiveCardsHostConfig}}
             directLine={directline}
+            styleOptions={styleOptions as FullBundleStyleOptions}
         />
     </div>
   );
