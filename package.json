@@ -1,0 +1,22 @@
+{
+  "name": "@convodroid/brfwebchat",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/convodroid/brfwebchat.git"
+  },
+  "keywords": [],
+  "workspaces": [
+    "./packages/*"
+  ],
+  "author": "VivinMeth",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://gitlab.com/convodroid/brfwebchat/issues"
+  },
+  "homepage": "https://gitlab.com/convodroid/brfwebchat#readme",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

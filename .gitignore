@@ -1,3 +1,8 @@
+/**/.idea/
+/**/node_module/
+/**/build/
+/**/dist/
 /.idea/
-/node_module/
 /dist/
+/build/
+/node_modules/
