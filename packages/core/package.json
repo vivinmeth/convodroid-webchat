@@ -2,9 +2,9 @@
   "name": "@convodroid/bfrwebchat-core",
   "version": "0.1.0",
   "homepage-azure": "https://emplayazstorage.blob.core.windows.net/emplaywebchat-test/react",
-  "main": "build/static/js/main.c15ea09d.chunk.js",
-  "module": "dist/esm/index.js",
-  "browser": "dist/browser/data-structures.js",
+  "main": "lib",
+  "module": "lib-esm",
+  "browser": "browser/convodroid.bfrwebchat-core.min.js",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
@@ -80,8 +80,11 @@
   },
   "scripts": {
     "skip:preflight": "export SKIP_PREFLIGHT_CHECK=true",
+    "clean": "rm -rf lib lib-esm browser",
     "start": "npm run skip:preflight && node scripts/start.js",
-    "build": "npm run skip:preflight && node scripts/build.js",
+    "build:cra": "npm run skip:preflight && node scripts/build.js",
+    "build:lib": "tsc && tsc -m es2020 --outDir lib-esm",
+    "build": "npm run clean && npm run build:lib && npm run build:cra",
     "test": "npm run skip:preflight && node scripts/test.js"
   },
   "eslintConfig": {

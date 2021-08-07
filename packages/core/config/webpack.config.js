@@ -204,8 +204,8 @@ module.exports = function (webpackEnv) {
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
       filename: isEnvProduction
-        ? 'static/js/convodroid.bfrwebchat-core.min.js'
-        : isEnvDevelopment && 'static/js/convodroid.bfrwebchat-core.js',
+        ? 'convodroid.bfrwebchat-core.min.js'
+        : isEnvDevelopment && 'convodroid.bfrwebchat-core.js',
       // TODO: remove this when upgrading to webpack 5
 
       futureEmitAssets: true,
@@ -232,7 +232,8 @@ module.exports = function (webpackEnv) {
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
       library: 'ConvodroidBFRWebChatCore',
-      libraryTarget: 'var'
+      libraryTarget: 'umd',
+      umdNamedDefine: true
 
     },
     optimization: {
@@ -646,7 +647,7 @@ module.exports = function (webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: 'static/css/convodroid.bfrwebchat-core.css',
+          filename: 'convodroid.bfrwebchat-core.css',
           // chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
       // Generate an asset manifest file with the following content:

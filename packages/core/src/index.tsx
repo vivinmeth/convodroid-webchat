@@ -1,11 +1,14 @@
 import './styles/main.scss';
 import App from './app/App';
-import {ConvodroidBFRWebchatCore} from "./app/ConvodroidBFRWebchatCore";
-export * from './app/middlewares';
+import * as CORE_MODULE from "./app/ConvodroidBFRWebchatCore";
+import * as Middlewares from './app/middlewares';
 
-export const ConvodroidReactBFRWebchat = App;
+export const CORE = {
+    ...CORE_MODULE,
+    Middlewares,
+    ConvodroidReactBFRWebchat: App
+}
 
 export const newInstance = () => {
-    return new ConvodroidBFRWebchatCore();
+    return new CORE_MODULE.ConvodroidBFRWebchatCore();
 };
-

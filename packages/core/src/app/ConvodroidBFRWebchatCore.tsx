@@ -2,7 +2,7 @@ import ReactDOM from "react-dom";
 import React from "react";
 
 import reportWebVitals from "../reportWebVitals";
-import {ConvodroidReactBFRWebchat} from "../index";
+import {CORE} from "../index";
 import {StyleOptionsMiddleware} from "./middlewares/styleOptions.middleware";
 import {DirectlineMiddleware} from "./middlewares/directline.middleware";
 import {AdaptiveCardsHostConfigMiddleware} from "./middlewares/adaptiveCardsHostConfig.middleware";
@@ -44,7 +44,7 @@ export class ConvodroidBFRWebchatCore{
 
         ReactDOM.render(
             <React.StrictMode>
-                <ConvodroidReactBFRWebchat
+                <CORE.ConvodroidReactBFRWebchat
                     CORE={this}
                 />
         </React.StrictMode>,
