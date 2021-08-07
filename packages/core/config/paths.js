@@ -21,7 +21,7 @@ const publicUrlOrPath = getPublicUrlOrPath(
   process.env.PUBLIC_URL
 );
 
-const buildPath = process.env.BUILD_PATH || 'browser';
+const buildPath = process.env.BUILD_PATH || 'dist/browser';
 
 const moduleFileExtensions = [
   'web.mjs',
