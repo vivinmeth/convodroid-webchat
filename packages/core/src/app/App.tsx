@@ -19,7 +19,7 @@ export default function App(
   });
 
   return (
-    <div id={'convodroid__bfrwebchat'}>
+    <div id={'convodroid__bfrwebchat'} style={{width: "100%", height: "100%"}}>
         <ReactWebChat
             userID={'vivinmeth.lv@emplay.net'}
             username={'vivinmeth'}
