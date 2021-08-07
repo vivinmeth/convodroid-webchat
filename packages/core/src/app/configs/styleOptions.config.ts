@@ -1,6 +1,6 @@
 import BotAvatar from '../../assets/images/bot-avatar.png';
 
-const styleOptions= {
+export const styleOptions= {
     accent: undefined, /** Web Chat component accent color */
     backgroundColor: '#ffffff', /** * Transcript background color **/
     subtle: undefined, /** Secondary component color **/
@@ -442,7 +442,3 @@ const styleOptions= {
     richCardWrapTitle: undefined
 };
 
-
-
-
-export default styleOptions;

@@ -1,39 +1,31 @@
 import React, {useMemo} from 'react';
 import ReactWebChat, {createDirectLine} from "botframework-webchat";
 
-
 import './App.scss';
-import {StyleOptionsMiddlewareBackEnd, StyleOptionsMiddlewareFrontEnd} from "./middlewares/styleOptions.middleware";
-import {
-    AdaptiveCardsHostConfigMiddlewareBackEnd,
-    AdaptiveCardsHostConfigMiddlewareFrontEnd
-} from "./middlewares/adaptiveCardsHostConfig.middleware";
+import {ConvodroidBFRWebchatCore} from "./ConvodroidBFRWebchatCore";
 
 export default function App(
-    props: {
-    StyleOptionsMWRFrontEnd: StyleOptionsMiddlewareFrontEnd
-    AdaptiveCardsHostConfigMWRFrontEnd: AdaptiveCardsHostConfigMiddlewareFrontEnd
+    props:{
+        CORE: ConvodroidBFRWebchatCore
     }
 ) {
-  const directline = useMemo(() => createDirectLine({
-      token: 'TwbA_KoJmQU.3-BAeeMaH_O2FvFnZ6Ez2Phc6VilHNoRvGslZ3mXmiU',
-      // domain: 'http://localhost:5003/directline'
-  }), []);
+    const DirectlineConfig = props.CORE.Middlewares.DirectlineMWR.LockedConfig;
+
+
+
+    const directline = useMemo(() => createDirectLine(DirectlineConfig), [DirectlineConfig]);
   directline.connectionStatus$.subscribe(status => {
     // console.log('Directline -> Connnection Status:', status, directline);
   });
-
-  const StyleOptionsMWRBackend = new StyleOptionsMiddlewareBackEnd(props.StyleOptionsMWRFrontEnd);
-  const AdaptiveCardsHostConfigMWRBackend = new AdaptiveCardsHostConfigMiddlewareBackEnd(props.AdaptiveCardsHostConfigMWRFrontEnd)
 
   return (
     <div id={'convodroid__bfrwebchat'}>
         <ReactWebChat
             userID={'vivinmeth.lv@emplay.net'}
             username={'vivinmeth'}
-            adaptiveCardsHostConfig={{...AdaptiveCardsHostConfigMWRBackend.HostConfig}}
+            adaptiveCardsHostConfig={props.CORE.Middlewares.AdaptiveCardsHostConfigMWR.LockedHostConfig}
             directLine={directline}
-            styleOptions={StyleOptionsMWRBackend.StyleOptions}
+            styleOptions={props.CORE.Middlewares.StyleOptionsMWR.LockedStyleOptions}
         />
     </div>
   );

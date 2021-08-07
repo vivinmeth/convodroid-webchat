@@ -1,4 +1,4 @@
-const AdaptiveCardsHostConfig = {
+export const AdaptiveCardsHostConfig = {
     hostCapabilities: {capabilities: null},
     choiceSetInputValueSeparator: ",",
     supportsInteractivity: true,
@@ -122,5 +122,3 @@ const AdaptiveCardsHostConfig = {
         fontWeights: {lighter: 200, default: 400, bolder: 600}
     }
 };
-
-export default AdaptiveCardsHostConfig;

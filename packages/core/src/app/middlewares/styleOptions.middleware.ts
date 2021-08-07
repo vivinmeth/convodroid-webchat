@@ -1,59 +1,62 @@
-import styleOptions from '../configs/styleOptions.config';
+import {styleOptions} from '../configs/styleOptions.config';
 import FullBundleStyleOptions from "botframework-webchat/lib/types/FullBundleStyleOptions";
+import {ObjectSanitize} from "../utils/object-sanitize.util";
 
 
-export class StyleOptionsMiddlewareBackEnd{
+export class StyleOptionsMiddleware{
     readonly #BaseStyleOptions = {};
-    readonly #FrontEndStyleOptionsLocked = {}
+    #FrontEndStyleOptions: {[option: string]: any} = {}
+    #FrontEndStyleOptionsLock: {[option: string]: any} = {}
 
-    get StyleOptions(): FullBundleStyleOptions {
+    #ConfigLocked = false;
+
+    get StyleOptions() {
+        return this.#FrontEndStyleOptions;
+    }
+
+    get LockedStyleOptions(): FullBundleStyleOptions {
         let StyleOptions = {};
-        Object.assign(StyleOptions, this.#BaseStyleOptions, this.#FrontEndStyleOptionsLocked);
+        Object.assign(StyleOptions, this.#BaseStyleOptions, this.#FrontEndStyleOptionsLock);
 
-        return StyleOptionsMiddlewareBackEnd.Sanitize(StyleOptions as FullBundleStyleOptions) as FullBundleStyleOptions;
-    }
-
-    constructor(private StyleOptionsMWRFrontEnd: StyleOptionsMiddlewareFrontEnd) {
-        this.#BaseStyleOptions = styleOptions;
-        this.#FrontEndStyleOptionsLocked = {...this.StyleOptionsMWRFrontEnd.StyleOptions};
-        console.log('StyleOptionsMiddlewareBackEnd -> Init Done! StyleOptions Locked! StyleOptionsMiddlewareBackEnd:', this);
-    }
-
-    static Sanitize(styleOptions: FullBundleStyleOptions): any{
-        // @ts-ignore
-        Object.keys(styleOptions).forEach(key => styleOptions[key] === undefined ? delete styleOptions[key] : {});
-        return styleOptions;
-    }
-}
-
-export class StyleOptionsMiddlewareFrontEnd{
-    #StyleOptions: {[p: string]: any} = {};
-
-    get StyleOptions(){
-        return this.#StyleOptions;
+        return ObjectSanitize(StyleOptions) as FullBundleStyleOptions;
     }
 
     get BaseStyleOptions(){
-        return {...styleOptions};
+        return {...this.#BaseStyleOptions};
     }
 
     constructor() {
-        console.log('StyleOptionsMiddlewareFrontEnd -> Init!');
+        this.#BaseStyleOptions = styleOptions;
+        console.log('StyleOptionsMiddleware -> Init Done!');
+    }
+
+    lockConfig(): boolean{
+        if (!this.#ConfigLocked){
+            this.#FrontEndStyleOptionsLock = {...this.#FrontEndStyleOptions};
+            this.#ConfigLocked = true;
+            console.log('StyleOptionsMiddleware -> Config Locked!');
+        }
+        else{
+            console.warn('StyleOptionsMiddleware -> Config Already Locked!');
+        }
+        return true;
+
     }
 
     setStyleOption(option: string, value: any): void{
-        this.#StyleOptions[option] = value;
+        this.#FrontEndStyleOptions[option] = value;
     }
 
     loadStyleOptions(styleOptions: {[p: string]: any}, replace: boolean = false): void{
         if (replace){
-            this.#StyleOptions = styleOptions;
+            this.#FrontEndStyleOptions = styleOptions;
         }
         else{
             let styleOptionsFinal = {};
-            Object.assign(styleOptionsFinal, this.#StyleOptions, styleOptions);
-            this.#StyleOptions = styleOptionsFinal;
+            Object.assign(styleOptionsFinal, this.#FrontEndStyleOptions, styleOptions);
+            this.#FrontEndStyleOptions = styleOptionsFinal;
         }
 
     }
 }
+

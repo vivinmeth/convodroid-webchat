@@ -1,59 +1,63 @@
-import adaptiveCardsHostConfig from "../configs/adaptiveCardsHostConfig.config";
+import {AdaptiveCardsHostConfig} from "../configs/adaptiveCardsHostConfig.config";
+import {ObjectSanitize} from "../utils/object-sanitize.util";
 
 
 
-export class AdaptiveCardsHostConfigMiddlewareBackEnd{
+export class AdaptiveCardsHostConfigMiddleware{
     readonly #BaseHostConfig = {};
-    readonly #FrontEndHostConfigLocked = {}
+    #FrontEndHostConfig: {[p: string]: any} = {}
+    #FrontEndHostConfigLock: {[p: string]: any} = {}
 
-    get HostConfig(): any {
+    #ConfigLocked = false;
+
+    get HostConfig() {
+        return this.#FrontEndHostConfig;
+    }
+
+    get LockedHostConfig(): any {
         let HostConfig = {};
-        Object.assign(HostConfig, this.#BaseHostConfig, this.#FrontEndHostConfigLocked);
+        Object.assign(HostConfig, this.#BaseHostConfig, this.#FrontEndHostConfigLock);
 
-        return AdaptiveCardsHostConfigMiddlewareBackEnd.Sanitize(HostConfig);
-    }
-
-    constructor(private AdaptiveCardsHostConfigMWRFrontEnd: AdaptiveCardsHostConfigMiddlewareFrontEnd) {
-        this.#BaseHostConfig = adaptiveCardsHostConfig;
-        this.#FrontEndHostConfigLocked = {...this.AdaptiveCardsHostConfigMWRFrontEnd.HostConfig};
-        console.log('AdaptiveCardsHostConfigMiddlewareBackEnd -> Init Done! HostConfig Locked! AdaptiveCardsHostConfigMiddlewareBackEnd:', this);
-    }
-
-    static Sanitize(HostConfig: any): any{
-        // @ts-ignore
-        Object.keys(HostConfig).forEach(key => HostConfig[key] === undefined ? delete HostConfig[key] : {});
-        return HostConfig;
-    }
-}
-
-export class AdaptiveCardsHostConfigMiddlewareFrontEnd{
-    #HostConfig: {[p: string]: any} = {};
-
-    get HostConfig(){
-        return this.#HostConfig;
+        return ObjectSanitize(HostConfig);
     }
 
     get BaseHostConfig(){
-        return {...adaptiveCardsHostConfig};
+        return {...this.#BaseHostConfig};
     }
 
     constructor() {
-        console.log('AdaptiveCardsHostConfigMiddlewareFrontEnd -> Init!');
+        this.#BaseHostConfig = AdaptiveCardsHostConfig;
+        console.log('AdaptiveCardsHostConfigMiddlewareBackEnd -> Init Done!');
+    }
+
+    lockConfig(): boolean{
+        if (!this.#ConfigLocked){
+            this.#FrontEndHostConfigLock = {...this.#FrontEndHostConfig};
+            this.#ConfigLocked = true;
+            console.log('StyleOptionsMiddleware -> Config Locked!');
+        }
+        else{
+            console.warn('StyleOptionsMiddleware -> Config Already Locked!');
+        }
+        return true;
+
     }
 
     setHostConfig(option: string, value: any): void{
-        this.#HostConfig[option] = value;
+        this.#FrontEndHostConfig[option] = value;
     }
 
     loadHostConfig(HostConfig: {[p: string]: any}, replace: boolean = false): void{
         if (replace){
-            this.#HostConfig = HostConfig;
+            this.#FrontEndHostConfig = HostConfig;
         }
         else{
             let HostConfigFinal = {};
-            Object.assign(HostConfigFinal, this.#HostConfig, HostConfig);
-            this.#HostConfig = HostConfigFinal;
+            Object.assign(HostConfigFinal, this.#FrontEndHostConfig, HostConfig);
+            this.#FrontEndHostConfig = HostConfigFinal;
         }
 
     }
+
+
 }
