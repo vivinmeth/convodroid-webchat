@@ -33,11 +33,27 @@ export class StyleOptionsMiddlewareFrontEnd{
         return this.#StyleOptions;
     }
 
+    get BaseStyleOptions(){
+        return {...styleOptions};
+    }
+
     constructor() {
         console.log('StyleOptionsMiddlewareFrontEnd -> Init!');
     }
 
     setStyleOption(option: string, value: any): void{
         this.#StyleOptions[option] = value;
+    }
+
+    loadStyleOptions(styleOptions: {[p: string]: any}, replace: boolean = false): void{
+        if (replace){
+            this.#StyleOptions = styleOptions;
+        }
+        else{
+            let styleOptionsFinal = {};
+            Object.assign(styleOptionsFinal, this.#StyleOptions, styleOptions);
+            this.#StyleOptions = styleOptionsFinal;
+        }
+
     }
 }

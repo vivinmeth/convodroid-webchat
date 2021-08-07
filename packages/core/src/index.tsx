@@ -4,10 +4,12 @@ import './styles/main.scss';
 import App from './app/App';
 import reportWebVitals from "./reportWebVitals";
 import {StyleOptionsMiddlewareFrontEnd} from "./app/middlewares/styleOptions.middleware";
+import {AdaptiveCardsHostConfigMiddlewareFrontEnd} from "./app/middlewares/adaptiveCardsHostConfig.middleware";
 
 export const ConvodroidReactBFRWebchat = App;
 
 export const StyleOptionsMiddleware = new StyleOptionsMiddlewareFrontEnd();
+export const AdaptiveCardsHostConfigMiddleware = new AdaptiveCardsHostConfigMiddlewareFrontEnd();
 
 
 export const bootstrap = (container: { Id?: string, Element?: (HTMLElement | null)}) => {
@@ -29,6 +31,7 @@ export const bootstrap = (container: { Id?: string, Element?: (HTMLElement | nul
         <React.StrictMode>
             <ConvodroidReactBFRWebchat
                 StyleOptionsMWRFrontEnd={StyleOptionsMiddleware}
+                AdaptiveCardsHostConfigMWRFrontEnd={AdaptiveCardsHostConfigMiddleware}
             />
         </React.StrictMode>,
         container.Element || element as HTMLElement);
