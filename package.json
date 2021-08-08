@@ -18,5 +18,6 @@
   "homepage": "https://gitlab.com/convodroid/brfwebchat#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
+
   }
 }

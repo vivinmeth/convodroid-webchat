@@ -5,7 +5,7 @@
   "main": "dist/lib/index.js",
   "module": "dist/lib-esm/index.js",
   "browser": "dist/browser/convodroid.bfrwebchat-core.min.js",
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@svgr/webpack": "5.5.0",
@@ -24,7 +24,6 @@
     "babel-plugin-named-asset-import": "^0.3.7",
     "babel-preset-react-app": "^10.0.0",
     "bfj": "^7.0.2",
-    "botframework-webchat": "^4.12.0",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "4.3.0",
@@ -58,10 +57,8 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "5.0.2",
     "prompts": "2.4.0",
-    "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
     "react-dev-utils": "^11.0.3",
-    "react-dom": "^17.0.2",
     "react-refresh": "^0.8.3",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",
@@ -78,14 +75,21 @@
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "5.1.4"
   },
+  "dependencies": {
+    "botframework-webchat": "^4.14.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
   "scripts": {
     "skip:preflight": "export SKIP_PREFLIGHT_CHECK=true",
     "clean": "rm -rf dist",
-    "start": "npm run skip:preflight && node scripts/start.js",
-    "build:cra": "npm run skip:preflight && node scripts/build.js",
+    "start": "node scripts/start.js",
+    "build:cra": "node scripts/build.js",
     "build:lib": "tsc --build tsconfig.json && tsc --build tsconfig-esm.json",
     "build": "npm run clean && npm run build:lib && npm run build:cra",
-    "test": "npm run skip:preflight && node scripts/test.js"
+    "test": "node scripts/test.js"
   },
   "eslintConfig": {
     "extends": [
