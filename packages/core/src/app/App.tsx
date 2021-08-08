@@ -21,11 +21,12 @@ export default function App(
   return (
     <div id={'convodroid__bfrwebchat'} style={{width: "100%", height: "100%"}}>
         <ReactWebChat
-            userID={'vivinmeth.lv@emplay.net'}
-            username={'vivinmeth'}
+            userID={props.CORE.Middlewares.UserMWR.Config.id}
+            username={props.CORE.Middlewares.UserMWR.Config.name}
             adaptiveCardsHostConfig={props.CORE.Middlewares.AdaptiveCardsHostConfigMWR.LockedHostConfig}
             directLine={directline}
             styleOptions={props.CORE.Middlewares.StyleOptionsMWR.LockedStyleOptions}
+            locale={'en-US'}
         />
     </div>
   );

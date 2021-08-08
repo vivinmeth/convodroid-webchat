@@ -27,17 +27,17 @@ export class AdaptiveCardsHostConfigMiddleware{
 
     constructor() {
         this.#BaseHostConfig = AdaptiveCardsHostConfig;
-        console.log('AdaptiveCardsHostConfigMiddlewareBackEnd -> Init Done!');
+        console.log('AdaptiveCardsHostConfigMiddleware -> Init Done!');
     }
 
     lockConfig(): boolean{
         if (!this.#ConfigLocked){
             this.#FrontEndHostConfigLock = {...this.#FrontEndHostConfig};
             this.#ConfigLocked = true;
-            console.log('StyleOptionsMiddleware -> Config Locked!');
+            console.log('AdaptiveCardsHostConfigMiddleware -> Config Locked!');
         }
         else{
-            console.warn('StyleOptionsMiddleware -> Config Already Locked!');
+            console.warn('AdaptiveCardsHostConfigMiddleware -> Config Already Locked!');
         }
         return true;
 
