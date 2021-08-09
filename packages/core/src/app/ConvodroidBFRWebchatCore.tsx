@@ -58,6 +58,7 @@ export class ConvodroidBFRWebchatCore{
         if (!root.id){
             root.id = "convodroid__bfrwebchat__root-" + uuidV4();
         }
+        // Todo: Remove Roots as multi instance injection causes kernel panic [error in react internals].
         this.#Roots[root.id] = root;
 
         if (!this.validateAndLockAllMiddlewares()){
