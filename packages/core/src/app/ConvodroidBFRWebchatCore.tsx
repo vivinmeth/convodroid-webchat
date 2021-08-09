@@ -7,6 +7,7 @@ import {StyleOptionsMiddleware} from "./middlewares/styleOptions.middleware";
 import {DirectlineMiddleware} from "./middlewares/directline.middleware";
 import {AdaptiveCardsHostConfigMiddleware} from "./middlewares/adaptiveCardsHostConfig.middleware";
 import {UserMiddleware} from "./middlewares/user.middleware";
+import {StoreMiddleware} from "./middlewares";
 
 export class ConvodroidBFRWebchatCore{
 
@@ -14,7 +15,8 @@ export class ConvodroidBFRWebchatCore{
         AdaptiveCardsHostConfigMWR: new AdaptiveCardsHostConfigMiddleware(),
         StyleOptionsMWR: new StyleOptionsMiddleware(),
         DirectlineMWR: new DirectlineMiddleware(),
-        UserMWR: new UserMiddleware()
+        UserMWR: new UserMiddleware(),
+        StoreMWR: new StoreMiddleware()
     }
 
     get Middlewares(){

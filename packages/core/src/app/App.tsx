@@ -25,6 +25,7 @@ export default function App(
             username={props.CORE.Middlewares.UserMWR.Config.name}
             adaptiveCardsHostConfig={props.CORE.Middlewares.AdaptiveCardsHostConfigMWR.LockedHostConfig}
             directLine={directline}
+            store={props.CORE.Middlewares.StoreMWR.Store}
             styleOptions={props.CORE.Middlewares.StyleOptionsMWR.LockedStyleOptions}
             locale={'en-US'}
         />
