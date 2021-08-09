@@ -1,3 +1,5 @@
+import {createDirectLine} from "botframework-webchat";
+
 import {DirectlineConfig} from "../configs/directline.config";
 import {ObjectSanitize} from "../utils/object-sanitize.util";
 
@@ -8,6 +10,13 @@ export class DirectlineMiddleware{
     #FrontEndConfigLock: {[option: string]: any} = {};
 
     #ConfigLocked = false;
+
+    #Connection: any;
+
+    get Connection() {
+        this.connect();
+        return this.#Connection;
+    }
 
     get Config() {
         return this.#FrontEndConfig;
@@ -28,6 +37,12 @@ export class DirectlineMiddleware{
         this.#BaseConfig = DirectlineConfig;
         console.log('DirectlineMiddlewareBackEnd -> Init Done!');
 
+    }
+
+    connect(): void{
+        if (!this.#Connection){
+            this.#Connection = createDirectLine(this.LockedConfig);
+        }
     }
 
     validate(): boolean{

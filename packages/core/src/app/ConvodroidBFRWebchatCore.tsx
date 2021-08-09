@@ -1,5 +1,6 @@
-import ReactDOM from "react-dom";
+import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import React from "react";
+import {v4 as uuidV4} from "uuid";
 
 import reportWebVitals from "../reportWebVitals";
 import {CORE} from "../index";
@@ -10,6 +11,8 @@ import {UserMiddleware} from "./middlewares/user.middleware";
 import {StoreMiddleware} from "./middlewares";
 
 export class ConvodroidBFRWebchatCore{
+    #ID: string = uuidV4();
+    #Roots: {[k: string]: HTMLElement} = {};
 
     #Middlewares = {
         AdaptiveCardsHostConfigMWR: new AdaptiveCardsHostConfigMiddleware(),
@@ -17,6 +20,10 @@ export class ConvodroidBFRWebchatCore{
         DirectlineMWR: new DirectlineMiddleware(),
         UserMWR: new UserMiddleware(),
         StoreMWR: new StoreMiddleware()
+    }
+
+    get ID() {
+        return this.#ID;
     }
 
     get Middlewares(){
@@ -42,16 +49,30 @@ export class ConvodroidBFRWebchatCore{
             }
         }
 
+        let root = container.Element || element;
+
+        if (!root){
+            return;
+        }
+
+        if (!root.id){
+            root.id = "convodroid__bfrwebchat__root-" + uuidV4();
+        }
+        this.#Roots[root.id] = root;
+
         if (!this.validateAndLockAllMiddlewares()){
             return;
         }
 
+        this.#Middlewares.DirectlineMWR.connect();
         ReactDOM.render(
             <React.StrictMode>
                 <CORE.ConvodroidReactBFRWebchat
+                    key={root.id}
                     CORE={this}
+
                 />
-        </React.StrictMode>,
+            </React.StrictMode>,
         container.Element || element as HTMLElement);
 
         // If you want to start measuring performance in your app, pass a function
@@ -59,6 +80,14 @@ export class ConvodroidBFRWebchatCore{
         // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
         reportWebVitals();
 
+    }
+
+    shutdown(): void{
+        for (const rootId in this.#Roots){
+            if (this.#Roots.hasOwnProperty(rootId)){
+                unmountComponentAtNode(this.#Roots[rootId]);
+            }
+        }
     }
 
     validateAndLockAllMiddlewares(): boolean{
