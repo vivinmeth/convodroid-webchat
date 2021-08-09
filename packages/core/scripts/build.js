@@ -46,9 +46,12 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 
 const argv = process.argv.slice(2);
 const writeStatsJson = argv.indexOf('--stats') !== -1;
+const isVar = argv.indexOf('--var') !== -1;
+
+paths.appBuild += `/${isVar ? 'var' : 'umd'}`;
 
 // Generate configuration
-const config = configFactory('production');
+const config = configFactory('production', isVar ? 'var' : 'umd');
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.

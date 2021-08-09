@@ -18,6 +18,9 @@
   "homepage": "https://gitlab.com/convodroid/brfwebchat#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
-
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

@@ -79,7 +79,7 @@ const hasJsxRuntime = (() => {
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function (webpackEnv) {
+module.exports = function (webpackEnv , libraryType) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -232,7 +232,7 @@ module.exports = function (webpackEnv) {
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
       library: 'ConvodroidBFRWebChatCore',
-      libraryTarget: 'umd',
+      libraryTarget: libraryType || 'umd',
       umdNamedDefine: true
 
     },

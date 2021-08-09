@@ -90,7 +90,7 @@
     "start": "node scripts/start.js",
     "build:cra": "node scripts/build.js",
     "build:lib": "tsc --build tsconfig.json && tsc --build tsconfig-esm.json",
-    "build": "npm run clean && npm run build:lib && npm run build:cra",
+    "build": "npm run clean && npm run build:lib && npm run build:cra -- --var && npm run build:cra",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
