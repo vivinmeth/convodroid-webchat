@@ -3,6 +3,7 @@ import App from './app/App';
 import * as CORE_MODULE from "./app/ConvodroidBFRWebchatCore";
 import * as Middlewares from './app/middlewares';
 
+// Todo: Change this to root import instead of CORE [it might get confusing for consumers]
 export const CORE = {
     ...CORE_MODULE,
     Middlewares,
