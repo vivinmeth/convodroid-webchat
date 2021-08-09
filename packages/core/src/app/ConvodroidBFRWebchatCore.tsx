@@ -1,18 +1,16 @@
-import ReactDOM, {unmountComponentAtNode} from "react-dom";
+import * as ReactDOM from "react-dom";
 import React from "react";
-import {v4 as uuidV4} from "uuid";
 
 import reportWebVitals from "../reportWebVitals";
 import {CORE} from "../index";
-import {StyleOptionsMiddleware} from "./middlewares/styleOptions.middleware";
-import {DirectlineMiddleware} from "./middlewares/directline.middleware";
-import {AdaptiveCardsHostConfigMiddleware} from "./middlewares/adaptiveCardsHostConfig.middleware";
-import {UserMiddleware} from "./middlewares/user.middleware";
+import {StyleOptionsMiddleware} from "./middlewares";
+import {DirectlineMiddleware} from "./middlewares";
+import {AdaptiveCardsHostConfigMiddleware} from "./middlewares";
+import {UserMiddleware} from "./middlewares";
 import {StoreMiddleware} from "./middlewares";
 
 export class ConvodroidBFRWebchatCore{
-    #ID: string = uuidV4();
-    #Roots: {[k: string]: HTMLElement} = {};
+    #Root?: HTMLElement;
 
     #Middlewares = {
         AdaptiveCardsHostConfigMWR: new AdaptiveCardsHostConfigMiddleware(),
@@ -22,8 +20,8 @@ export class ConvodroidBFRWebchatCore{
         StoreMWR: new StoreMiddleware()
     }
 
-    get ID() {
-        return this.#ID;
+    get root(){
+        return this.#Root;
     }
 
     get Middlewares(){
@@ -49,32 +47,27 @@ export class ConvodroidBFRWebchatCore{
             }
         }
 
-        let root = container.Element || element;
+        const root = container.Element || element;
 
-        if (!root){
+        if (this.#Root !instanceof HTMLElement){
             return;
         }
-
-        if (!root.id){
-            root.id = "convodroid__bfrwebchat__root-" + uuidV4();
-        }
-        // Todo: Remove Roots as multi instance injection causes kernel panic [error in react internals].
-        this.#Roots[root.id] = root;
 
         if (!this.validateAndLockAllMiddlewares()){
             return;
         }
 
+        this.#Root = root;
+
         this.#Middlewares.DirectlineMWR.connect();
         ReactDOM.render(
-            <React.StrictMode>
+            <React.Fragment>
                 <CORE.ConvodroidReactBFRWebchat
-                    key={root.id}
                     CORE={this}
 
                 />
-            </React.StrictMode>,
-        container.Element || element as HTMLElement);
+            </React.Fragment>,
+        this.#Root as Element);
 
         // If you want to start measuring performance in your app, pass a function
         // to log results (for example: reportWebVitals(console.log))
@@ -84,11 +77,7 @@ export class ConvodroidBFRWebchatCore{
     }
 
     shutdown(): void{
-        for (const rootId in this.#Roots){
-            if (this.#Roots.hasOwnProperty(rootId)){
-                unmountComponentAtNode(this.#Roots[rootId]);
-            }
-        }
+        this.#Root && ReactDOM.unmountComponentAtNode(this.#Root);
     }
 
     validateAndLockAllMiddlewares(): boolean{

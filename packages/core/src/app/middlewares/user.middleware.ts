@@ -48,10 +48,10 @@ export class UserMiddleware{
         if (!this.#ConfigLocked){
             this.#FrontEndConfigLock = {...this.#configureUser()};
             this.#ConfigLocked = true;
-            console.log('AdaptiveCardsHostConfigMiddleware -> Config Locked!');
+            console.log('UserMiddleware -> Config Locked!');
         }
         else{
-            console.warn('AdaptiveCardsHostConfigMiddleware -> Config Already Locked!');
+            console.warn('UserMiddleware -> Config Already Locked!');
         }
         return true;
 

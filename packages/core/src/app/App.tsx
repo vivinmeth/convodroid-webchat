@@ -1,5 +1,5 @@
-import React, {useMemo} from 'react';
-import ReactWebChat, {createDirectLine} from "botframework-webchat";
+import React from 'react';
+import ReactWebChat from "botframework-webchat";
 
 import './App.scss';
 import {ConvodroidBFRWebchatCore} from "./ConvodroidBFRWebchatCore";
@@ -9,14 +9,6 @@ export default function App(
         CORE: ConvodroidBFRWebchatCore
     }
 ) {
-  //   const DirectlineConfig = props.CORE.Middlewares.DirectlineMWR.LockedConfig;
-  //
-  //
-  //
-  //   const directline = useMemo(() => createDirectLine(DirectlineConfig), [DirectlineConfig]);
-  // directline.connectionStatus$.subscribe(status => {
-  //   // console.log('Directline -> Connnection Status:', status, directline);
-  // });
   return (
     <div id={'convodroid__bfrwebchat'} style={{width: "100%", height: "100%"}}>
         <ReactWebChat
