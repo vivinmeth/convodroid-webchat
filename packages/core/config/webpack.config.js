@@ -345,8 +345,8 @@ module.exports = function (webpackEnv , libraryType) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
-        react: path.resolve(__dirname, '../../../node_modules/isomorphic-react/dist/react.js'),
-        'react-dom': path.resolve(__dirname, '../../../node_modules/isomorphic-react-dom/dist/react-dom.js')
+        react: path.resolve(__dirname, '../src/isomorphic-react/dist/react.js'),
+        'react-dom': path.resolve(__dirname, '../src/isomorphic-react-dom/dist/react-dom.js')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding

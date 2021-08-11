@@ -57,11 +57,11 @@ export class UserMiddleware{
 
     }
 
-    setHostConfig(option: string, value: any): void{
+    setUserConfig(option: string, value: any): void{
         this.#FrontEndConfig[option] = value;
     }
 
-    loadHostConfig(Config: {[p: string]: any}, replace: boolean = false): void{
+    loadUserConfig(Config: {[p: string]: any}, replace: boolean = false): void{
         if (replace){
             this.#FrontEndConfig = Config;
         }

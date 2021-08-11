@@ -53,7 +53,7 @@ export class ConvodroidBFRWebchatCore{
             return;
         }
 
-        if (!this.validateAndLockAllMiddlewares()){
+        if (!this.#validateAndLockAllMiddlewares()){
             return;
         }
 
@@ -80,7 +80,7 @@ export class ConvodroidBFRWebchatCore{
         this.#Root && ReactDOM.unmountComponentAtNode(this.#Root);
     }
 
-    validateAndLockAllMiddlewares(): boolean{
+    #validateAndLockAllMiddlewares = (): boolean => {
         console.warn('ConvodroidBFRWebchatCore -> Locking all middlewares!');
         const lockStatus: boolean[] = [];
         for (const mwr in this.#Middlewares){

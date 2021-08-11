@@ -5,7 +5,7 @@ import {
     LogicInstance,
     Logics,
     StoreEvents,
-} from "../types/store.types";
+} from "../../types/store.types";
 
 export class StoreMiddleware{
     #EVENT_LOGICS: EventLogics = {};
