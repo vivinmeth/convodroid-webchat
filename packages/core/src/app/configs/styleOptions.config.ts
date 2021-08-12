@@ -1,4 +1,4 @@
-import BotAvatar from '../../assets/images/bot-avatar.png';
+// import BotAvatar from '../../assets/images/bot-avatar.png';
 
 export const styleOptions= {
     accent: undefined, /** Web Chat component accent color */
@@ -19,7 +19,7 @@ export const styleOptions= {
     avatarBorderRadius: undefined, /** Border radius used for both bot and user avatar **/
     avatarSize: undefined, /** Height and width of avatar **/
     botAvatarBackgroundColor: undefined, /** Background color defaults to accent **/
-    botAvatarImage: BotAvatar, /** URL string. Can be data URI or blob * botAvatarInitials must be set to empty string **/
+    botAvatarImage: undefined, /** URL string. Can be data URI or blob * botAvatarInitials must be set to empty string **/
     botAvatarInitials: '', /** Typically rendered as two letters, e.g. 'WC' * Empty string is required when setting botAvatarImage **/
     userAvatarBackgroundColor: undefined, /** Background color defaults to accent **/
     userAvatarImage: undefined, /** URL string. Can be data URI or blob * userAvatarInitials must be set to empty string **/

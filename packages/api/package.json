@@ -18,6 +18,10 @@
   "author": "VivinMeth",
   "license": "UNLICENSED",
   "dependencies": {
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

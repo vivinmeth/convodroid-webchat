@@ -1,14 +1,14 @@
 import {AdaptiveCardsHostConfig} from "../configs/adaptiveCardsHostConfig.config";
 import {ObjectSanitize} from "../utils/object-sanitize.util";
+import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract";
 
 
 
-export class AdaptiveCardsHostConfigMiddleware{
+export class AdaptiveCardsHostConfigMiddleware extends ConfigMiddlewareAbstract{
     readonly #BaseHostConfig = {};
     #FrontEndHostConfig: {[p: string]: any} = {}
     #FrontEndHostConfigLock: {[p: string]: any} = {}
 
-    #ConfigLocked = false;
 
     get HostConfig() {
         return this.#FrontEndHostConfig;
@@ -26,21 +26,13 @@ export class AdaptiveCardsHostConfigMiddleware{
     }
 
     constructor() {
+        super();
         this.#BaseHostConfig = AdaptiveCardsHostConfig;
         console.log('AdaptiveCardsHostConfigMiddleware -> Init Done!');
     }
 
-    lockConfig(): boolean{
-        if (!this.#ConfigLocked){
-            this.#FrontEndHostConfigLock = {...this.#FrontEndHostConfig};
-            this.#ConfigLocked = true;
-            console.log('AdaptiveCardsHostConfigMiddleware -> Config Locked!');
-        }
-        else{
-            console.warn('AdaptiveCardsHostConfigMiddleware -> Config Already Locked!');
-        }
-        return true;
-
+    configLockLogic(): void{
+        this.#FrontEndHostConfigLock = {...this.#FrontEndHostConfig};
     }
 
     setHostConfig(option: string, value: any): void{

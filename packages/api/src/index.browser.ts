@@ -1,1 +1,1 @@
-export const API = "Iam API export!";
+export * from "./ConvodroidBFRWebChatAPI";

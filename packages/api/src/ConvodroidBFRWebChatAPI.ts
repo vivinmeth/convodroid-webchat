@@ -1,8 +1,11 @@
 import {v4 as uuidV4} from "uuid";
 import {newInstance} from "@convodroid/bfrwebchat-core";
-import {BotUser, FullBotUser} from "@convodroid/bfrwebchat-core/dist/lib/types"
+import {BotUser} from "@convodroid/bfrwebchat-core/dist/lib/types"
 
-import {AnonymousUser, BotConfig, TokenEndpointConfig} from "./types/api.types";
+import {AnonymousUser, BotConfig, RebootTypes, RootElementConfig, TokenEndpointConfig} from "./types/api.types";
+import {ConfigsGateway} from "./gateway/configs.gateway";
+import {TokenStoreUtil} from "./utils/token-store.util";
+import {DirectlineMiddleware, StoreMiddleware} from "@convodroid/bfrwebchat-core/dist/lib/app/middlewares";
 
 /*
     this can be used to bootstrap the script and run the injection code and bot bootup.
@@ -18,31 +21,61 @@ import {AnonymousUser, BotConfig, TokenEndpointConfig} from "./types/api.types";
  */
 
 export class ConvodroidBFRWebChatAPI{
+    #ID = uuidV4();
+    readonly #BotConfig: BotConfig;
     #CORE = newInstance();
-
-    #BotConfig: BotConfig;
-    #BotUser: FullBotUser;
-
-    #USE_GET_TOKEN = false;
-
-    // START: StyleOptions Middleware Glue Code //
-
-    get BaseStyleOptions() {
-        return this.#CORE.Middlewares.StyleOptionsMWR.StyleOptions;
+    #ConfigsGateway = new ConfigsGateway(this.#CORE);
+    readonly #TokenStore: TokenStoreUtil;
+    #RootConfig: RootElementConfig = {
+        Id: undefined,
+        Element: undefined
     }
 
-    get StyleOptions() {
-        return this.#CORE.Middlewares.StyleOptionsMWR.StyleOptions;
+
+    get RootConfig(): RootElementConfig {
+        return {...this.#RootConfig};
     }
 
-    get LockedStyleOptions() {
-        return this.#CORE.Middlewares.StyleOptionsMWR.LockedStyleOptions;
+    set RootConfig(container){
+        if (container.Element){
+            if (!container.Element.id){
+                container.Element.id = 'convodroid__bfrwebchat__root-'+this.#ID;
+            }
+            this.#RootConfig.Id = container.Element.id;
+            this.#RootConfig.Element = container.Element;
+        }else if (container.Id){
+            this.#RootConfig.Id = container.Id;
+            this.#RootConfig.Element = document.getElementById(container.Id) || undefined;
+
+        }
     }
 
-    set StyleOptions(StyleOptions) {
-        this.#CORE.Middlewares.StyleOptionsMWR.loadStyleOptions(StyleOptions);
+
+    get Configs(): ConfigsGateway{
+        return this.#ConfigsGateway;
     }
-    // END: StyleOptions Middleware Glue Code //
+
+    get TokenStore(): TokenStoreUtil{
+        return  this.#TokenStore;
+    }
+
+    #Middlewares= {
+        context: this,
+        get StoreMWR(){
+            return this.context.#CORE.Middlewares.StoreMWR;
+        },
+        get DirectlineMWR() {
+          return this.context.#CORE.Middlewares.DirectlineMWR;
+        }
+    }
+
+    get Middlewares(): {context: ConvodroidBFRWebChatAPI, readonly StoreMWR: StoreMiddleware, readonly DirectlineMWR: DirectlineMiddleware}{
+        return this.#Middlewares;
+    }
+
+    get DirectlineMiddlware() {
+        return this.#CORE.Middlewares.DirectlineMWR;
+    }
 
     constructor(
         {
@@ -51,9 +84,9 @@ export class ConvodroidBFRWebChatAPI{
             tokenEndpointConfig = undefined,
         }: BotConfig,
         {
-            name = AnonymousUser.name,
-            email = AnonymousUser.email
-        }: BotUser = {},
+            name,
+            email
+        }: BotUser = {name: AnonymousUser.name, email: AnonymousUser.email},
         locale: string = AnonymousUser.locale,
     ) {
 
@@ -72,29 +105,45 @@ export class ConvodroidBFRWebChatAPI{
             tokenEndpointConfig,
         };
 
-        if (email === AnonymousUser.email){
-            this.#BotUser.id = uuidV4();
-        }
-        else{
-            this.#BotUser.id = email;
-        }
-        this.#BotUser.name = name === AnonymousUser.name ? (`${name} <${this.#BotUser.id}>`): name;
-        this.#BotUser.email = email;
-        this.#BotUser.locale = locale;
+        this.#CORE.Middlewares.UserMWR.loadUserConfig({
+            name,
+            email,
+            locale
+        });
 
-        this.#CORE.Middlewares.UserMWR.loadUserConfig(this.#BotUser, true);
 
-        if (!tokenEndpointConfig){
-            this.#CORE.Middlewares.DirectlineMWR.Config.secret = directlineSecret;
-        }
+        this.#TokenStore = new TokenStoreUtil(this.#BotConfig, this.#CORE.Middlewares.UserMWR.Config as BotUser);
+        this.#TokenStore.initializeStore().then(() => {
+            this.#CORE.Middlewares.DirectlineMWR.loadConfig(this.#TokenStore.ConversationObject, true);
+        });
     }
 
-    // START: StyleOptions Middleware Glue Code //
-
-    loadStyleOptions(StyleOptions, replace: boolean = false){
-        this.#CORE.Middlewares.StyleOptionsMWR.loadStyleOptions(StyleOptions, replace);
+    async bootup(): Promise<void>{
+        this.#CORE.bootstrap(this.#RootConfig)
     }
-    // END: StyleOptions Middleware Glue Code //
+
+    async shutdown(): Promise<void>{
+        this.#CORE.shutdown();
+    }
+
+    async reboot(type: RebootTypes = RebootTypes.SIMPLE): Promise<void>{
+        if (type !== RebootTypes.SOFT && type !== RebootTypes.HARD && type !== RebootTypes.SIMPLE){
+            console.error('ConvodroidBFRWebChatAPI -> reboot type is not valid.')
+            return;
+        }
+        await this.shutdown();
+        if (type === RebootTypes.SOFT || type === RebootTypes.HARD){
+            await this.#TokenStore.NewToken();
+            this.#CORE.Middlewares.DirectlineMWR.loadConfig(this.#TokenStore.ConversationObject);
+
+        }
+        if (type === RebootTypes.HARD){
+            console.warn('ConvodroidBFRWebChatAPI -> Hard reset is a bad Idea! One or more Configs will be reset to default.');
+            this.#CORE.Middlewares.StyleOptionsMWR.loadStyleOptions({}, true);
+            this.#CORE.Middlewares.AdaptiveCardsHostConfigMWR.loadHostConfig({}, true);
+        }
+        await this.bootup();
+    }
 
 
 

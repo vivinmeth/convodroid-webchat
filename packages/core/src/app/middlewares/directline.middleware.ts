@@ -2,14 +2,14 @@ import {createDirectLine} from "botframework-webchat";
 
 import {DirectlineConfig} from "../configs/directline.config";
 import {ObjectSanitize} from "../utils/object-sanitize.util";
+import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract";
 
 
-export class DirectlineMiddleware{
+export class DirectlineMiddleware extends ConfigMiddlewareAbstract{
     readonly #BaseConfig = {};
     #FrontEndConfig: {[option: string]: any} = {};
     #FrontEndConfigLock: {[option: string]: any} = {};
 
-    #ConfigLocked = false;
 
     #Connection: any;
 
@@ -34,6 +34,7 @@ export class DirectlineMiddleware{
     }
 
     constructor() {
+        super();
         this.#BaseConfig = DirectlineConfig;
         console.log('DirectlineMiddlewareBackEnd -> Init Done!');
 
@@ -45,6 +46,10 @@ export class DirectlineMiddleware{
         }
     }
 
+    disconnect(): void{
+        this.#Connection = undefined;
+    }
+
     validate(): boolean{
         const isValid = (!!this.#FrontEndConfig.secret || !!this.#FrontEndConfig.token) && !(!!this.#FrontEndConfig.secret && !!this.#FrontEndConfig.token);
         if (!isValid){
@@ -53,16 +58,8 @@ export class DirectlineMiddleware{
         return isValid;
     }
 
-    lockConfig(): boolean{
-        if (!this.#ConfigLocked){
-            this.#FrontEndConfigLock = {...this.#FrontEndConfig};
-            this.#ConfigLocked = true;
-            console.log('DirectlineMiddleware -> Config Locked!');
-        }
-        else{
-            console.warn('DirectlineMiddleware -> Config Already Locked!');
-        }
-        return true;
+    configLockLogic(): void{
+        this.#FrontEndConfigLock = {...this.#FrontEndConfig};
     }
 
     setConfig(option: string, val: any): void{

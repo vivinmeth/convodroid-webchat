@@ -1,4 +1,4 @@
-import './styles/main.scss';
+// import './styles/main.scss';
 import App from './app/App';
 import * as CORE_MODULE from "./app/ConvodroidBFRWebchatCore";
 import * as Middlewares from './app/middlewares';

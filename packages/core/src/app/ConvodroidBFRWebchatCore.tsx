@@ -20,6 +20,8 @@ export class ConvodroidBFRWebchatCore{
         StoreMWR: new StoreMiddleware()
     }
 
+    #LockSecrets: {[k: string]: string | undefined} = {}
+
     get root(){
         return this.#Root;
     }
@@ -32,7 +34,7 @@ export class ConvodroidBFRWebchatCore{
         console.log();
     }
 
-    bootstrap = (container: { Id?: string, Element?: (HTMLElement | null)}) => {
+    bootstrap = (container: { Id?: string, Element?: HTMLElement}) => {
         let element;
 
         if (!container.Id && !container.Element){
@@ -40,7 +42,7 @@ export class ConvodroidBFRWebchatCore{
             return;
         }
         else if (container.Id){
-            element = document.getElementById(container.Id)
+            element = document.getElementById(container.Id) || undefined
             if (!element){
                 console.error("ConvodroidBFRWebchatCore -> bootstrap failed! Container ", container, "not defined!");
                 return;
@@ -78,6 +80,8 @@ export class ConvodroidBFRWebchatCore{
 
     shutdown(): void{
         this.#Root && ReactDOM.unmountComponentAtNode(this.#Root);
+        this.#Middlewares.DirectlineMWR.disconnect();
+        this.#unlockAllMiddlewares();
     }
 
     #validateAndLockAllMiddlewares = (): boolean => {
@@ -87,16 +91,28 @@ export class ConvodroidBFRWebchatCore{
             if (this.#Middlewares.hasOwnProperty(mwr)){
                 // @ts-ignore
                 const valid = this.#Middlewares[mwr].validate ? this.#Middlewares[mwr].validate() : true;
-                let locked = false;
+                let locked: [boolean, string | undefined] = [false, undefined];
                 if (valid){
                     // @ts-ignore
-                    locked = this.#Middlewares[mwr].lockConfig ? this.#Middlewares[mwr].lockConfig() : true;
+                    locked = this.#Middlewares[mwr].lockConfig ? this.#Middlewares[mwr].lockConfig() : [true, undefined];
+                    this.#LockSecrets[mwr] = locked[1];
                 }
-                lockStatus.push((valid && locked));
+                lockStatus.push((valid && locked[0]));
             }
         }
         console.log('ConvodroidBFRWebchatCore -> lockStatus:', lockStatus);
         return !lockStatus.includes(false);
+    }
+
+    #unlockAllMiddlewares = () => {
+        console.warn('ConvodroidBFRWebchatCore -> Unlocking all middlewares!');
+
+        for (const mwr in this.#Middlewares){
+            if (this.#Middlewares.hasOwnProperty(mwr)){
+                // @ts-ignore
+                this.#Middlewares[mwr].unlockConfig && this.#Middlewares[mwr].unlockConfig(this.#LockSecrets[mwr]);
+            }
+        }
     }
 
 }

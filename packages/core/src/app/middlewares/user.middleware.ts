@@ -1,13 +1,13 @@
 import {UserConfig} from "../configs/user.config";
 import {v4 as uuidV4} from 'uuid';
+import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract";
 
 
-export class UserMiddleware{
+export class UserMiddleware extends ConfigMiddlewareAbstract{
     #BaseConfig: typeof UserConfig;
     #FrontEndConfig: {[p: string]: any} = {};
     #FrontEndConfigLock: {[p: string]: any} = {};
 
-    #ConfigLocked = false;
 
     get Config() {
         return this.#FrontEndConfig;
@@ -25,6 +25,7 @@ export class UserMiddleware{
     }
 
     constructor() {
+        super();
         this.#BaseConfig = UserConfig;
         console.log('UserMiddleware -> Init Done!');
     }
@@ -44,17 +45,8 @@ export class UserMiddleware{
         return config;
     }
 
-    lockConfig(): boolean{
-        if (!this.#ConfigLocked){
-            this.#FrontEndConfigLock = {...this.#configureUser()};
-            this.#ConfigLocked = true;
-            console.log('UserMiddleware -> Config Locked!');
-        }
-        else{
-            console.warn('UserMiddleware -> Config Already Locked!');
-        }
-        return true;
-
+    configLockLogic(): void{
+        this.#FrontEndConfigLock = {...this.#configureUser()};
     }
 
     setUserConfig(option: string, value: any): void{

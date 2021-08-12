@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactWebChat from "botframework-webchat";
 
-import './App.scss';
+// import './App.scss';
 import {ConvodroidBFRWebchatCore} from "./ConvodroidBFRWebchatCore";
 
 export default function App(
