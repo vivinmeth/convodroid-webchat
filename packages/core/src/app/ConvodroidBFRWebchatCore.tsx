@@ -49,17 +49,25 @@ export class ConvodroidBFRWebchatCore{
             }
         }
 
-        const root = container.Element || element;
-
-        if (this.#Root !instanceof HTMLElement){
+        const root = container.Element || element as HTMLElement;
+        console.log('ConvodroidBFRWebchatCore -> ', root, container);
+        if (!(root instanceof HTMLElement)){
             return;
         }
-
+        console.log('ConvodroidBFRWebchatCore -> root is valid ');
         if (!this.#validateAndLockAllMiddlewares()){
             return;
         }
+        console.log('ConvodroidBFRWebchatCore -> Middlewars are locked');
+
 
         this.#Root = root;
+
+        if (!this.#Root || !((this.#Root as any) instanceof HTMLElement)){
+            return;
+        }
+        console.log('ConvodroidBFRWebchatCore -> #root is valid ');
+
 
         this.#Middlewares.DirectlineMWR.connect();
         ReactDOM.render(

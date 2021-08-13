@@ -114,12 +114,13 @@ export class ConvodroidBFRWebChatAPI{
 
 
         this.#TokenStore = new TokenStoreUtil(this.#BotConfig, this.#CORE.Middlewares.UserMWR.Config as BotUser);
-        this.#TokenStore.initializeStore().then(() => {
-            this.loadDirectlineConfig(this.#TokenStore.ConversationTuple);
-        });
+
     }
 
     async bootup(): Promise<void>{
+        await this.#TokenStore.initializeStore();
+        this.loadDirectlineConfig(this.#TokenStore.ConversationTuple);
+        console.log('bootstrapping the core webchat...');
         this.#CORE.bootstrap(this.#RootConfig)
     }
 
