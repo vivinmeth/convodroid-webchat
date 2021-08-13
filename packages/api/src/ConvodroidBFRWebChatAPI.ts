@@ -6,6 +6,7 @@ import {AnonymousUser, BotConfig, RebootTypes, RootElementConfig, TokenEndpointC
 import {ConfigsGateway} from "./gateway/configs.gateway";
 import {TokenStoreUtil} from "./utils/token-store.util";
 import {DirectlineMiddleware, StoreMiddleware} from "@convodroid/bfrwebchat-core/dist/lib/app/middlewares";
+import {ConversationObject} from "./types/token-store.types";
 
 /*
     this can be used to bootstrap the script and run the injection code and bot bootup.
@@ -114,7 +115,7 @@ export class ConvodroidBFRWebChatAPI{
 
         this.#TokenStore = new TokenStoreUtil(this.#BotConfig, this.#CORE.Middlewares.UserMWR.Config as BotUser);
         this.#TokenStore.initializeStore().then(() => {
-            this.#CORE.Middlewares.DirectlineMWR.loadConfig(this.#TokenStore.ConversationObject, true);
+            this.loadDirectlineConfig(this.#TokenStore.ConversationTuple);
         });
     }
 
@@ -134,8 +135,7 @@ export class ConvodroidBFRWebChatAPI{
         await this.shutdown();
         if (type === RebootTypes.SOFT || type === RebootTypes.HARD){
             await this.#TokenStore.NewToken();
-            this.#CORE.Middlewares.DirectlineMWR.loadConfig(this.#TokenStore.ConversationObject);
-
+            this.loadDirectlineConfig(this.#TokenStore.ConversationTuple);
         }
         if (type === RebootTypes.HARD){
             console.warn('ConvodroidBFRWebChatAPI -> Hard reset is a bad Idea! One or more Configs will be reset to default.');
@@ -143,6 +143,14 @@ export class ConvodroidBFRWebChatAPI{
             this.#CORE.Middlewares.AdaptiveCardsHostConfigMWR.loadHostConfig({}, true);
         }
         await this.bootup();
+    }
+
+    loadDirectlineConfig(ConversationTuple: [ConversationObject, boolean | undefined]){
+        const [ConversationObj, is_fresh_token] = ConversationTuple;
+        if (is_fresh_token){
+            delete ConversationObj.conversationId;
+        }
+        this.#CORE.Middlewares.DirectlineMWR.loadConfig(ConversationObj);
     }
 
 

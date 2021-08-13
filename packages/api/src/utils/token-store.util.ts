@@ -8,7 +8,6 @@ export class TokenStoreUtil{
     #StoreID = window.btoa(this.BotUser.email);
     #Store: TokenStore = {
         token: '',
-        conversationId: '',
         expires_in: 3600,
         generatedAt: new Date(0), // old date object to make sure the TokenStore is always initialised during new Instance
         expiresOn: new Date(3400) // old date object to make sure the TokenStore is always initialised during new Instance
@@ -18,16 +17,15 @@ export class TokenStoreUtil{
         return this.#Store.conversationId;
     }
 
-    get ConversationObject(): ConversationObject {
-        return {
+    get ConversationTuple(): [ConversationObject, boolean | undefined] {
+        return [{
             eTag: this.#Store.eTag,
             referenceGrammarId: this.#Store.referenceGrammarId,
             token: this.#Store.token,
             conversationId: this.#Store.conversationId,
             streamURL: this.#Store.streamURL,
             expires_in: this.#Store.expires_in
-
-        }
+        }, this.#Store.is_fresh_token]
     }
 
     get ID() {
@@ -82,23 +80,32 @@ export class TokenStoreUtil{
 
     async #loadToken(newToken = false): Promise<void>{
         let ConversationObj: ConversationObject;
+        let fresh_token = false;
         if (newToken || this.#Store.expiresOn.getTime() < Date.now()){
             ConversationObj = await this.#generateToken();
+            fresh_token = true;
         }
         else{
             const ReconnectConvObj = await this.#generateReconnectToken();
-            ConversationObj = ReconnectConvObj || await this.#generateToken();
+            if (!ReconnectConvObj){
+                ConversationObj = await this.#generateToken();
+                fresh_token = true;
+            }else{
+                ConversationObj = ReconnectConvObj;
+                fresh_token = false;
+            }
         }
-        this.#setToken(ConversationObj);
+        this.#setToken(ConversationObj, fresh_token);
 
     }
 
-    #setToken(ConversationObj: ConversationObject): void{
+    #setToken(ConversationObj: ConversationObject, is_fresh_token: boolean = false): void{
         const now = new Date(Date.now())
         this.#Store = {
             ...ConversationObj,
             generatedAt: now,
-            expiresOn: new Date(now.getTime() + ((ConversationObj.expires_in  - 120) * 1000))
+            expiresOn: new Date(now.getTime() + ((ConversationObj.expires_in  - 120) * 1000)),
+            is_fresh_token
         };
         TokenStoreUtil.setStore(this.BotConfig.botName, this.ID, this.#Store);
     }
