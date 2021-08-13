@@ -9,3 +9,6 @@
 /dist/
 /build/
 /node_modules/
+/packages/core/src/isomorphic-react
+/packages/core/src/isomorphic-react-dom
+
