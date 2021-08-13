@@ -40,10 +40,10 @@ export class TokenStoreUtil{
             return `https://directline.botframework.com/v3/directline/conversations/${this.context.#Store.conversationId}?watermark=-`;
         },
         get serverGet(): string{
-            return `${this.context.serverEndpoint}/${this.context.BotConfig.tokenEndpointConfig?.get_token_slug}?id=${this.context.BotUser.email}&name=${this.context.BotUser.name}`;
+            return `${this.context.serverEndpoint}${this.context.BotConfig.tokenEndpointConfig?.get_token_slug}?id=${this.context.BotUser.email}&name=${this.context.BotUser.name}`;
         },
         get serverReconnect(): string{
-            return `${this.context.serverEndpoint}/${this.context.BotConfig.tokenEndpointConfig?.reconnect_slug}/${this.context.#Store.conversationId}?watermark=-`;
+            return `${this.context.serverEndpoint}${this.context.BotConfig.tokenEndpointConfig?.reconnect_slug}/${this.context.#Store.conversationId}?watermark=-`;
         }
     };
     get tokenURL(): any{
@@ -80,7 +80,7 @@ export class TokenStoreUtil{
 
     async #loadToken(newToken = false): Promise<void>{
         let ConversationObj: ConversationObject;
-        let fresh_token = false;
+        let fresh_token;
         if (newToken || this.#Store.expiresOn.getTime() < Date.now()){
             ConversationObj = await this.#generateToken();
             fresh_token = true;
@@ -94,6 +94,9 @@ export class TokenStoreUtil{
                 ConversationObj = ReconnectConvObj;
                 fresh_token = false;
             }
+        }
+        if (!ConversationObj.token){
+            throw new Error('TokenStore -> load token failed. Invalid ConversationObject received from token generation flow.');
         }
         this.#setToken(ConversationObj, fresh_token);
 

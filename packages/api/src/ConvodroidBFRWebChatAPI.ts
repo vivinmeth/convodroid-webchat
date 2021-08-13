@@ -139,7 +139,7 @@ export class ConvodroidBFRWebChatAPI{
             this.loadDirectlineConfig(this.#TokenStore.ConversationTuple);
         }
         if (type === RebootTypes.HARD){
-            console.warn('ConvodroidBFRWebChatAPI -> Hard reset is a bad Idea! One or more Configs will be reset to default.');
+            console.warn('ConvodroidBFRWebChatAPI -> Hard reboot is a bad Idea! One or more Configs will be reset to default.');
             this.#CORE.Middlewares.StyleOptionsMWR.loadStyleOptions({}, true);
             this.#CORE.Middlewares.AdaptiveCardsHostConfigMWR.loadHostConfig({}, true);
         }
@@ -147,11 +147,12 @@ export class ConvodroidBFRWebChatAPI{
     }
 
     loadDirectlineConfig(ConversationTuple: [ConversationObject, boolean | undefined]){
+        console.log('ConvodroidBFRWebChatAPI -> loadDirectlineConfig loading with ConversationTuple:', ConversationTuple);
         const [ConversationObj, is_fresh_token] = ConversationTuple;
         if (is_fresh_token){
             delete ConversationObj.conversationId;
         }
-        this.#CORE.Middlewares.DirectlineMWR.loadConfig(ConversationObj);
+        this.#CORE.Middlewares.DirectlineMWR.loadConfig(ConversationObj, true);
     }
 
 
