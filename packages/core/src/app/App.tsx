@@ -10,7 +10,7 @@ export default function App(
     }
 ) {
   return (
-    <div id={'convodroid__bfrwebchat'} style={{width: "100%", height: "100%"}}>
+    <div id={'convodroid__bfrwebchat__core'} style={{width: "100%", height: "100%"}}>
         <ReactWebChat
             userID={props.CORE.Middlewares.UserMWR.Config.id}
             username={props.CORE.Middlewares.UserMWR.Config.name}
