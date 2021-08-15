@@ -2,8 +2,6 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.scss';
 
-import {Button} from './components'
-
 function App() {
   return (
     <div className="App">
@@ -20,10 +18,6 @@ function App() {
         >
           Learn React
         </a>
-        <Button
-          label={"Button"}
-          backgroundColor={"red"}
-        />
       </header>
     </div>
   );
