@@ -1,4 +1,7 @@
-export const DirectlineConfig = {
+import {DirectLineOptions} from "botframework-directlinejs"
+
+
+export const DirectlineConfig: DirectLineOptions = {
     secret: undefined, /* put your Direct Line secret here */
     token: undefined /* or put your Direct Line token here (supply secret OR token, not both) */,
     domain: undefined /* optional: if you are not using the default Direct Line endpoint, e.g. if you are using a region-specific endpoint, put its full URL here */,

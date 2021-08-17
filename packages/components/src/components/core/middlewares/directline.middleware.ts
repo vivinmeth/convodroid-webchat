@@ -1,4 +1,5 @@
 import {createDirectLine} from "botframework-webchat";
+import {DirectLineOptions, IBotConnection} from "botframework-directlinejs";
 
 import {DirectlineConfig} from "../configs/directline.config";
 import {ObjectSanitize} from "../utils/object-sanitize.util";
@@ -6,30 +7,30 @@ import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract"
 
 
 export class DirectlineMiddleware extends ConfigMiddlewareAbstract{
-    readonly #BaseConfig = {};
-    #FrontEndConfig: {[option: string]: any} = {};
-    #FrontEndConfigLock: {[option: string]: any} = {};
+    readonly #BaseConfig: DirectLineOptions = {};
+    #FrontEndConfig: DirectLineOptions = {};
+    #FrontEndConfigLock: DirectLineOptions = {};
 
 
-    #Connection: any;
+    #Connection?: IBotConnection;
 
-    get Connection() {
+    get Connection(): IBotConnection {
         this.connect();
-        return this.#Connection;
+        return this.#Connection as IBotConnection;
     }
 
-    get Config() {
+    get Config(): DirectLineOptions {
         return this.#FrontEndConfig;
     }
 
-    get LockedConfig() {
+    get LockedConfig(): DirectLineOptions {
         let ConfigFinal = {};
         Object.assign(ConfigFinal, this.#BaseConfig, this.#FrontEndConfigLock)
 
         return ObjectSanitize(ConfigFinal);
     }
 
-    get BaseConfig(){
+    get BaseConfig(): DirectLineOptions{
         return {...DirectlineConfig};
     }
 
@@ -42,7 +43,7 @@ export class DirectlineMiddleware extends ConfigMiddlewareAbstract{
 
     connect(): void{
         if (!this.#Connection){
-            this.#Connection = createDirectLine(this.LockedConfig);
+            this.#Connection = createDirectLine(this.LockedConfig as any);
         }
     }
 
@@ -62,11 +63,11 @@ export class DirectlineMiddleware extends ConfigMiddlewareAbstract{
         this.#FrontEndConfigLock = {...this.#FrontEndConfig};
     }
 
-    setConfig(option: string, val: any): void{
-        this.#FrontEndConfig[option] = val;
-    }
+    // setConfig(option: string, val: any): void{
+    //     this.#FrontEndConfig[option] = val;
+    // }
 
-    loadConfig(DirectlineConfig: {[p: string]: any}, replace: boolean = false): void{
+    loadConfig(DirectlineConfig: DirectLineOptions, replace: boolean = false): void{
         if (replace){
             this.#FrontEndConfig = DirectlineConfig;
         }else{

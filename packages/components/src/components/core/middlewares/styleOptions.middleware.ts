@@ -5,11 +5,11 @@ import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract"
 
 
 export class StyleOptionsMiddleware extends ConfigMiddlewareAbstract{
-    readonly #BaseStyleOptions = {};
-    #FrontEndStyleOptions: {[option: string]: any} = {}
-    #FrontEndStyleOptionsLock: {[option: string]: any} = {}
+    readonly #BaseStyleOptions: FullBundleStyleOptions = {};
+    #FrontEndStyleOptions: FullBundleStyleOptions = {}
+    #FrontEndStyleOptionsLock: FullBundleStyleOptions = {}
 
-    get StyleOptions() {
+    get StyleOptions(): FullBundleStyleOptions {
         return this.#FrontEndStyleOptions;
     }
 
@@ -20,7 +20,7 @@ export class StyleOptionsMiddleware extends ConfigMiddlewareAbstract{
         return ObjectSanitize(StyleOptions) as FullBundleStyleOptions;
     }
 
-    get BaseStyleOptions(){
+    get BaseStyleOptions(): FullBundleStyleOptions{
         return {...this.#BaseStyleOptions};
     }
 
@@ -34,11 +34,11 @@ export class StyleOptionsMiddleware extends ConfigMiddlewareAbstract{
         this.#FrontEndStyleOptionsLock = {...this.#FrontEndStyleOptions};
     }
 
-    setStyleOption(option: string, value: any): void{
-        this.#FrontEndStyleOptions[option] = value;
-    }
+    // setStyleOption(option: string, value: any): void{
+    //     this.#FrontEndStyleOptions[option] = value;
+    // }
 
-    loadStyleOptions(styleOptions: {[p: string]: any}, replace: boolean = false): void{
+    loadStyleOptions(styleOptions: FullBundleStyleOptions, replace: boolean = false): void{
         if (replace){
             this.#FrontEndStyleOptions = styleOptions;
         }

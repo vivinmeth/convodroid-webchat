@@ -7,8 +7,9 @@ import {DirectlineMiddleware} from "./middlewares";
 import {AdaptiveCardsHostConfigMiddleware} from "./middlewares";
 import {UserMiddleware} from "./middlewares";
 import {StoreMiddleware} from "./middlewares";
+import {CoreWebChatConfig} from "./types";
 
-export class ConvodroidBFRWebchatCore extends React.Component<any, any>{
+export class ConvodroidBFRWebchatCore extends React.Component<CoreWebChatConfig, any>{
     #Root?: HTMLElement;
 
     #Middlewares = {
@@ -39,9 +40,18 @@ export class ConvodroidBFRWebchatCore extends React.Component<any, any>{
         );
     }
 
-    constructor(props: any) {
+    constructor(props: CoreWebChatConfig) {
         super(props);
-        console.log();
+
+        props.DirectlineConfig && this.Middlewares.DirectlineMWR.loadConfig(props.DirectlineConfig);
+        props.UserConfig && this.Middlewares.UserMWR.loadUserConfig(props.UserConfig);
+        props.AdaptiveCardsHostConfig && this.Middlewares.AdaptiveCardsHostConfigMWR.loadHostConfig(props.AdaptiveCardsHostConfig);
+        props.StyleOptions && this.Middlewares.StyleOptionsMWR.loadStyleOptions(props.StyleOptions);
+
+        if(!props.vanillaJSHost && !this.#validateAndLockAllMiddlewares()){
+            this.#unlockAllMiddlewares();
+            throw new Error('ConvodroidBFRWebchatCore -> One or more config is not valid!');
+        }
     }
 
     bootstrap = (container: { Id?: string, Element?: HTMLElement}) => {
@@ -66,6 +76,7 @@ export class ConvodroidBFRWebchatCore extends React.Component<any, any>{
         }
         console.log('ConvodroidBFRWebchatCore -> root is valid ');
         if (!this.#validateAndLockAllMiddlewares()){
+            this.#unlockAllMiddlewares();
             return;
         }
         console.log('ConvodroidBFRWebchatCore -> Middlewars are locked');
@@ -127,4 +138,7 @@ export class ConvodroidBFRWebchatCore extends React.Component<any, any>{
         }
     }
 
+    static propTypes: CoreWebChatConfig;
+
 }
+

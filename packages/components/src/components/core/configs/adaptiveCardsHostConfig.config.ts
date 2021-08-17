@@ -1,4 +1,4 @@
-export const AdaptiveCardsHostConfig = {
+export const AdaptiveCardsHostConfig: any = {
     hostCapabilities: {capabilities: null},
     choiceSetInputValueSeparator: ",",
     supportsInteractivity: true,

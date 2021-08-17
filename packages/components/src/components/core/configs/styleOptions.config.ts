@@ -1,6 +1,9 @@
 // import BotAvatar from '../../assets/images/bot-avatar.png';
 
-export const styleOptions= {
+import FullBundleStyleOptions from "botframework-webchat/lib/types/FullBundleStyleOptions";
+
+
+export const styleOptions: FullBundleStyleOptions = {
     accent: undefined, /** Web Chat component accent color */
     backgroundColor: '#ffffff', /** * Transcript background color **/
     subtle: undefined, /** Secondary component color **/

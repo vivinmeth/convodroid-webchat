@@ -1,27 +1,28 @@
 import {UserConfig} from "../configs/user.config";
 import {v4 as uuidV4} from 'uuid';
 import {ConfigMiddlewareAbstract} from "../abstracts/config-middleware.abstract";
+import {BotUser, FullBotUser} from "../types";
 
 
 export class UserMiddleware extends ConfigMiddlewareAbstract{
-    #BaseConfig: typeof UserConfig;
-    #FrontEndConfig: {[p: string]: any} = {};
-    #FrontEndConfigLock: {[p: string]: any} = {};
+    #BaseConfig: BotUser;
+    #FrontEndConfig: FullBotUser | {} = {};
+    #FrontEndConfigLock: FullBotUser | {} = {};
 
 
-    get Config() {
-        return this.#FrontEndConfig;
+    get Config(): FullBotUser {
+        return this.#FrontEndConfig as FullBotUser;
     }
 
-    get BaseConfig() {
+    get BaseConfig(): BotUser {
         return {...this.#BaseConfig};
     }
 
-    get LockedConfig() {
+    get LockedConfig(): FullBotUser {
         const FinalConfig = {};
         Object.assign(FinalConfig, this.#BaseConfig, this.#FrontEndConfigLock);
 
-        return FinalConfig;
+        return FinalConfig as FullBotUser;
     }
 
     constructor() {
@@ -30,7 +31,7 @@ export class UserMiddleware extends ConfigMiddlewareAbstract{
         console.log('UserMiddleware -> Init Done!');
     }
 
-    #configureUser = (): any => {
+    #configureUser = (): FullBotUser => {
         const config = this.Config;
 
         if (config.email){
@@ -49,11 +50,11 @@ export class UserMiddleware extends ConfigMiddlewareAbstract{
         this.#FrontEndConfigLock = {...this.#configureUser()};
     }
 
-    setUserConfig(option: string, value: any): void{
-        this.#FrontEndConfig[option] = value;
-    }
+    // setUserConfig(option: string, value: any): void{
+    //     this.#FrontEndConfig[option] = value;
+    // }
 
-    loadUserConfig(Config: {[p: string]: any}, replace: boolean = false): void{
+    loadUserConfig(Config: BotUser, replace: boolean = false): void{
         if (replace){
             this.#FrontEndConfig = Config;
         }

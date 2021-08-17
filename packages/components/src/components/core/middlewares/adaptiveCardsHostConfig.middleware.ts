@@ -35,9 +35,9 @@ export class AdaptiveCardsHostConfigMiddleware extends ConfigMiddlewareAbstract{
         this.#FrontEndHostConfigLock = {...this.#FrontEndHostConfig};
     }
 
-    setHostConfig(option: string, value: any): void{
-        this.#FrontEndHostConfig[option] = value;
-    }
+    // setHostConfig(option: string, value: any): void{
+    //     this.#FrontEndHostConfig[option] = value;
+    // }
 
     loadHostConfig(HostConfig: {[p: string]: any}, replace: boolean = false): void{
         if (replace){

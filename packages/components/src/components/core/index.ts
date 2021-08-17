@@ -1,1 +1,1 @@
-export * as Core from './ConvodroidBFRWebchatCore';
+export * from './ConvodroidBFRWebchatCore';

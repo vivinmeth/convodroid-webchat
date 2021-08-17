@@ -1,14 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 
-import {Core} from './components';
+import {ConvodroidBFRWebchatCore} from './components';
 
 import './App.scss';
 
 function App() {
   return (
     <div className="App">
-      <Core.ConvodroidBFRWebchatCore />
+      {/*<ConvodroidBFRWebchatCore*/}
+      {/*    DirectlineConfig={{*/}
+      {/*        secret: "TwbA_KoJmQU.3-BAeeMaH_O2FvFnZ6Ez2Phc6VilHNoRvGslZ3mXmiU"*/}
+      {/*    }}*/}
+      {/*/>*/}
     </div>
   );
 }

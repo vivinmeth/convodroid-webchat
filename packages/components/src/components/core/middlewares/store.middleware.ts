@@ -1,4 +1,5 @@
 import {createStore} from 'botframework-webchat';
+import {Store} from "redux";
 
 import {
     EventLogics,
@@ -15,10 +16,10 @@ export class StoreMiddleware{
     #PRE_EVENT_LOGICS: string[] = [];
     #POST_EVENT_LOGICS: string[] = [];
 
-    readonly #STORE;
+    readonly #STORE?: Store;
 
-    get Store() {
-        return this.#STORE;
+    get Store(): Store {
+        return this.#STORE as Store;
     }
 
     // Returns all registered Logics and their instances.
