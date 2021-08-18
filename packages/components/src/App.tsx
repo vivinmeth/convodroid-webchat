@@ -7,7 +7,11 @@ import './App.scss';
 function App() {
   return (
     <div className="App">
-     <Core/>
+     <Core
+        DirectlineConfig={{
+            secret: "TwbA_KoJmQU.3-BAeeMaH_O2FvFnZ6Ez2Phc6VilHNoRvGslZ3mXmiU"
+        }}
+     />
     </div>
   );
 }

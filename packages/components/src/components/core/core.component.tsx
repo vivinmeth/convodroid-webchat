@@ -8,11 +8,13 @@ import {AdaptiveCardsHostConfigMiddleware} from "./middlewares";
 import {UserMiddleware} from "./middlewares";
 import {StoreMiddleware} from "./middlewares";
 import {CoreWebChatConfig} from "./types";
+import {ActivityMiddlewares} from "./middlewares/activity.middleware";
 
 export class Core extends React.Component<CoreWebChatConfig, any>{
     #Root?: HTMLElement;
 
     #Middlewares = {
+        ActivityMWR: new ActivityMiddlewares(),
         AdaptiveCardsHostConfigMWR: new AdaptiveCardsHostConfigMiddleware(),
         StyleOptionsMWR: new StyleOptionsMiddleware(),
         DirectlineMWR: new DirectlineMiddleware(),
@@ -34,13 +36,30 @@ export class Core extends React.Component<CoreWebChatConfig, any>{
         return (
             <div id={'convodroid__bfrwebchat__core'} style={{width: "100%", height: "100%"}}>
                 <ReactWebChat
+                    activityMiddleware={this.Middlewares.ActivityMWR.transformer}
+                    activityStatusMiddleware={undefined}
+                    attachmentForScreenReaderMiddleware={undefined}
+                    attachmentMiddleware={undefined}
+                    avatarMiddleware={undefined}
+                    cardActionMiddleware={undefined}
+                    directLine={this.Middlewares.DirectlineMWR.Connection}
+                    disabled={undefined}
+                    groupActivitiesMiddleware={undefined}
+                    internalErrorBoxClass={undefined}
+                    internalRenderErrorBox={undefined}
+                    locale={'en-US'}
+                    renderMarkdown={undefined}
+                    scrollToEndButtonMiddleware={undefined}
+                    selectVoice={undefined}
+                    sendTypingIndicator={undefined}
+                    styleOptions={this.Middlewares.StyleOptionsMWR.LockedStyleOptions}
+                    toastMiddleware={undefined}
+                    typingIndicatorMiddleware={undefined}
                     userID={this.Middlewares.UserMWR.Config.id}
                     username={this.Middlewares.UserMWR.Config.name}
+
                     adaptiveCardsHostConfig={this.Middlewares.AdaptiveCardsHostConfigMWR.LockedHostConfig}
-                    directLine={this.Middlewares.DirectlineMWR.Connection}
                     store={this.Middlewares.StoreMWR.Store}
-                    styleOptions={this.Middlewares.StyleOptionsMWR.LockedStyleOptions}
-                    locale={'en-US'}
                 />
             </div>
         );
