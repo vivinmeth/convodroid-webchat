@@ -9,7 +9,11 @@ export class ActivityMiddlewares{
         console.log('ActivityMiddleware -> Init done!');
     }
 
-    transformer: ActivityMiddleware = () => (next: LegacyActivityRenderer): LegacyActivityRenderer => ((options: ActivityComponentFactoryOptions)  => {
+    get transformer(): ActivityMiddleware {
+        return this.#transformer;
+    }
+
+    #transformer: ActivityMiddleware = () => (next: LegacyActivityRenderer): LegacyActivityRenderer => ((options: ActivityComponentFactoryOptions)  => {
         const render = next(options);
         console.log('ActivityMiddleware -> Transformer Args:', render, next, options);
         if (render){
