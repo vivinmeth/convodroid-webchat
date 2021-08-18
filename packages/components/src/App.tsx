@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Core} from './components';
+import {Core} from './components/core';
 
 import './App.scss';
 
